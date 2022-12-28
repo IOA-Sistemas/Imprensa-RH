@@ -75,6 +75,12 @@ class Role(ModelBase):
         blank=False,
         verbose_name=('Role Description')
     )
+    
+    class Meta:
+        managed = True
+        db_table = 'role'
+        verbose_name = ('Role')
+        verbose_name_plural = ('Roles')
 
 # Table departamento
 class Departament(ModelBase):
@@ -92,6 +98,12 @@ class Departament(ModelBase):
         blank=True,
         verbose_name=('Departament Description')
     )
+    
+    class Meta:
+        managed = True
+        db_table = 'departament'
+        verbose_name = ('Departament')
+        verbose_name_plural = ('Departaments')
 
 # Table vinculo
 class EmploymentBond(ModelBase):
@@ -115,6 +127,12 @@ class EmploymentBond(ModelBase):
         blank=True,
         verbose_name=('Description')
     )
+    
+    class Meta:
+        managed = True
+        db_table = 'employment_bond'
+        verbose_name = ('Employment Bond')
+        verbose_name_plural = ('Employment Bonds')
 
 # Table servidor
 class Employee(ModelBase):
@@ -215,8 +233,16 @@ class Employee(ModelBase):
         verbose_name=('Employee Bond')
     )
     
+    class Meta:
+        managed = True
+        indexes = [
+            models.Index(fields=['role']),
+            models.Index(fields=['bond']),
+        ]
+        db_table = 'employee'
+        verbose_name = ('Employee')
+        verbose_name_plural = ('Employees')
     
-
 # Table alocacao
 class Allocation(ModelBase):
     start_date = models.DateField(
@@ -247,9 +273,19 @@ class Allocation(ModelBase):
         blank=False,
         verbose_name=('Employee')
     )
+    
+    class Meta:
+        managed = True
+        indexes = [
+            models.Index(fields=['employee']),
+            models.Index(fields=['departament']),
+        ]
+        db_table = 'allocation'
+        verbose_name = ('Allocation')
+        verbose_name_plural = ('Allocations')
 
 # Table relacao_alocacao_funcao
-class RelationAllocationFunction(ModelBase):
+class RelationAllocationRole(ModelBase):
     allocation = models.ForeignKey(
         'Allocation',
         db_column='id_allocation',
@@ -264,6 +300,16 @@ class RelationAllocationFunction(ModelBase):
         null=True,
         verbose_name=('Role')
     )
+    
+    class Meta:
+        managed = True
+        indexes = [
+            models.Index(fields=['allocation']),
+            models.Index(fields=['role']),
+        ]
+        db_table = 'relation_allocation_role'
+        verbose_name = ('Relation Allocation Role')
+        verbose_name_plural = ('Relations Allocations Roles')
     
 class Document(ModelBase):
     employee = models.ForeignKey(
@@ -282,6 +328,15 @@ class Document(ModelBase):
         verbose_name=('File Name')
     )
     
+    class Meta:
+        managed = True
+        indexes = [
+            models.Index(fields=['employee']),
+        ]
+        db_table = 'document'
+        verbose_name = ('Document')
+        verbose_name_plural = ('Documents')
+    
 class Code(ModelBase):
     code = models.CharField(
         db_column='tx_code',
@@ -290,6 +345,12 @@ class Code(ModelBase):
         blank=False,
         verbose_name=('Code')
     )
+    
+    class Meta:
+        managed = True
+        db_table = 'code'
+        verbose_name = ('Code')
+        verbose_name_plural = ('Codes')
 
 class Register(ModelBase):
     class TypeRegister(models.TextChoices):
@@ -316,5 +377,11 @@ class Register(ModelBase):
         choices=TypeRegister.choices,
         verbose_name=('Type of Clock Register')
     )
+    
+    class Meta:
+        managed = True
+        db_table = 'register'
+        verbose_name = ('Register')
+        verbose_name_plural = ('Registers')
 
 
