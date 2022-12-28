@@ -1,4 +1,6 @@
 from django.db import models
+import random
+
 # Create your models here.
 class ModelBase(models.Model):
     id = models.BigAutoField(
@@ -116,6 +118,11 @@ class EmploymentBond(ModelBase):
 
 # Table servidor
 class Employee(ModelBase):
+    def generate_register_number(lenght):
+        min = pow(10, lenght - 1)
+        max = pow(10, lenght) - 1
+        return random.randint(min, max)
+    
     name = models.CharField(
         db_column='tx_name',
         max_length=80,
@@ -128,6 +135,7 @@ class Employee(ModelBase):
         max_length=5,
         null=False,
         blank=False,
+        default=generate_register_number(5),
         verbose_name=('Register Number')
     )
     birth_date = models.DateField(
@@ -206,6 +214,8 @@ class Employee(ModelBase):
         blank=False,
         verbose_name=('Employee Bond')
     )
+    
+    
 
 # Table alocacao
 class Allocation(ModelBase):
