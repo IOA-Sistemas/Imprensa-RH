@@ -1,5 +1,11 @@
-# from rest_framework import serializers
-# from core.models import Scholarity, Post, Function, Departament, Bond, Employee, Allocation, RelationAllocationFunction
+from rest_framework import serializers
+from .models import Employee
+
+class EmployeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = '__all__'
+
 
 # class ScholaritySerial(serializers.ModelSerializer):
 #     class Meta:
@@ -24,11 +30,6 @@
 # class BondSerial(serializers.ModelSerializer):
 #     class Meta:
 #         model = Bond
-#         fields = ('__all__')
-
-# class EmployeeSerial(serializers.ModelSerializer):
-#     class Meta:
-#         model = Employee
 #         fields = ('__all__')
 
 # class AllocationSerial(serializers.ModelSerializer):

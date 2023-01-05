@@ -1,5 +1,6 @@
 from django.db import models
 import random
+from account.models import User
 
 class ModelInherance(models.Model):
     id = models.BigAutoField(
@@ -121,6 +122,13 @@ class Employee(ModelInherance):
         min = pow(10, lenght - 1)
         max = pow(10, lenght) - 1
         return random.randint(min, max)
+    
+    user = models.ForeignKey(
+        'User',
+        User,
+        on_delete=models.CASCADE,
+        null=False
+    )
     
     name = models.CharField(
         'Name',
