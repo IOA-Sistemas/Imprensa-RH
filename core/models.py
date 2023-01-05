@@ -1,38 +1,32 @@
 from django.db import models
 import random
 
-# Create your models here.
-class ModelBase(models.Model):
+class ModelInherance(models.Model):
     id = models.BigAutoField(
         db_column='id',
         primary_key=True,
     )
     created_at = models.DateTimeField(
-        db_column='dt_created',
+        'Created at',
         auto_now_add=True,
         null=True,
         blank=True,
-        verbose_name= 'Created at'
     )
     modified_at = models.DateTimeField(
-        db_column='dt_modified',
+        'Modified at',
         auto_now=True,
         null=True,
         blank=True,
-        verbose_name= 'Modified at'
     )
     is_active = models.BooleanField(
-        db_column='cs_active',
+        'Active',
         null=False,
         default=True,
-        verbose_name= 'Active'
     )
 
-    class Meta:
-        abstract = True
 
 # Table cargo
-class Role(ModelBase):
+class Role(ModelInherance):
     class Scholarity(models.TextChoices):
         MEDIO_INCOMPLETO = 'MI', ('Ensino Médio Incompleto')
         MEDIO_COMPLETO = 'MC', ('Ensino Médio Completo')
@@ -42,283 +36,237 @@ class Role(ModelBase):
         DOUTORADO = 'D', ('Doutorado')
     
     role_name = models.CharField(
-        db_column='tx_role_name',
+        'Role Name',
         max_length=80,
         null=False,
         blank=False,
-        verbose_name=('Role Name')
     )
     salary = models.FloatField(
-        db_column='nb_salary',
+        'Salary',
         null=False,
         blank=False,
-        verbose_name=('Salary')
     )
     scholarity = models.CharField(
-        db_column='cs_scholarity',
+        'Scholarity',
         max_length=2,
         null=False,
         blank=False,
         choices=Scholarity.choices,
-        verbose_name=('Scholarity')
     )
     graduation = models.CharField(
-        db_column='tx_graduation',
+        'Graduation',
         null=True,
         blank=True,
         max_length=80,
-        verbose_name=('Graduation')
     )
     role_description = models.TextField(
-        db_column='tx_role_desc',
+        'Role Description',
         null=False,
         blank=False,
-        verbose_name=('Role Description')
     )
     
-    class Meta:
-        managed = True
-        db_table = 'role'
-        verbose_name = ('Role')
-        verbose_name_plural = ('Roles')
+    def __str__(self) -> str:
+        return self.role_name
 
 # Table departamento
-class Departament(ModelBase):
+class Departament(ModelInherance):
     departament_name = models.CharField(
-        db_column='tx_departament_name',
+        'Departament Name',
         max_length=80,
         null=False,
         blank=False,
-        verbose_name=('Departament Name')
     )
     description = models.CharField(
-        db_column='description',
+       'Departament Description',
         max_length=200,
         null=True,
         blank=True,
-        verbose_name=('Departament Description')
     )
     
-    class Meta:
-        managed = True
-        db_table = 'departament'
-        verbose_name = ('Departament')
-        verbose_name_plural = ('Departaments')
+    def __str__(self) -> str:
+        return self.departament_name
 
 # Table vinculo
-class EmploymentBond(ModelBase):
+class EmploymentBond(ModelInherance):
     class Type(models.TextChoices):
         CLT = 'C', ('CLT')
         PJ = 'P', ('PJ')
         TRAINEE = 'T', ('Trainee')
     
     type = models.CharField(
-        db_column='cs_type',
+        'Type of Employment Bond',
         max_length=200,
         null=False,
         blank=False,
         choices=Type.choices,
-        verbose_name=('Type of Employment Bond')
     )
     description = models.CharField(
-        db_column='tx_description',
+        'Description',
         max_length=80,
         null=True,
         blank=True,
-        verbose_name=('Description')
     )
     
-    class Meta:
-        managed = True
-        db_table = 'employment_bond'
-        verbose_name = ('Employment Bond')
-        verbose_name_plural = ('Employment Bonds')
+    def __str__(self) -> str:
+        return self.type
+
 
 # Table servidor
-class Employee(ModelBase):
+class Employee(ModelInherance):
+    class Gender(models.TextChoices):
+        MALE = 'M', ('Male')
+        FEMALE = 'F', ('Female')
+    
     def generate_register_number(lenght):
         min = pow(10, lenght - 1)
         max = pow(10, lenght) - 1
         return random.randint(min, max)
     
     name = models.CharField(
-        db_column='tx_name',
+        'Name',
         max_length=80,
         null=False,
         blank=False,
-        verbose_name=('Name')
     )
     register_number = models.CharField(
-        db_column='tx_register_number',
+        'Register Number',
         max_length=5,
         null=False,
         blank=False,
         default=generate_register_number(5),
-        verbose_name=('Register Number')
     )
     birth_date = models.DateField(
-        db_column='dt_birth_date',
+        'BirthDate',
         null=False,
         blank=False,
-        verbose_name=('BirthDate')
+    )
+    gender = models.CharField(
+        'Gender',
+        null=False,
+        blank=False,
+        max_length=1,
+        choices=Gender.choices,
     )
     admission_date = models.DateField(
-        db_column='dt_admission_date',
+        'Admission Date',
         null=False,
         blank=False,
-        verbose_name=('Admission Date')
     )
     address = models.CharField(
-        db_column='tx_address',
+        'Adress',
         max_length=80,
         null=False,
         blank=False,
-        verbose_name=('Adress')
     )
     neighborhood = models.CharField(
-        db_column='tx_neighborhood',
+        'Neighborhood',
         max_length=80,
         null=False,
         blank=False,
-        verbose_name=('Neighborhood')
     )
     city = models.CharField(
-        db_column='tx_city',
+        'City',
         max_length=80,
         null=False,
         blank=False,
-        verbose_name=('City')
     )
     post_code = models.CharField(
-        db_column='tx_post_code',
+        'Post Code',
         max_length=15,
         null=False,
         blank=False,
-        verbose_name=('Post Code')
     )
     state = models.CharField(
-        db_column='tx_state',
+        'State',
         max_length=2,
         null=False,
         blank=False,
-        verbose_name=('State')
     )
     phone = models.IntegerField(
-        db_column='nb_phone',
+        'Phone',
         null=False,
         blank=False,
-        verbose_name=('Phone')
     )
     email = models.EmailField(
-        db_column='tx_email',
+        'Email',
         max_length=80,
         null=False,
         blank=False,
-        verbose_name=('Email')
     )
-    role = models.ForeignKey(
-        'Role',
-        db_column='id_role',
+    id_role = models.ForeignKey(
+        Role,
+        'Employee Role',
         on_delete=models.CASCADE,
         null=False,
         blank=False,
-        verbose_name=('Role')
     )
-    bond = models.ForeignKey(
-        'EmploymentBond',
-        db_column='id_bond',
+    id_bond = models.ForeignKey(
+        EmploymentBond,
+        'Employee Bond',
         on_delete=models.CASCADE,
         null=True,
         blank=False,
-        verbose_name=('Employee Bond')
     )
     
-    class Meta:
-        managed = True
-        indexes = [
-            models.Index(fields=['role']),
-            models.Index(fields=['bond']),
-        ]
-        db_table = 'employee'
-        verbose_name = ('Employee')
-        verbose_name_plural = ('Employees')
+    def __str__(self) -> str:
+        return self.name
     
 # Table alocacao
-class Allocation(ModelBase):
+class Allocation(ModelInherance):
     start_date = models.DateField(
-        db_column='dt_start_date',
+        'Start Date',
         null=False,
         blank=False,
-        verbose_name=('Start Date')
     )
     leave_date = models.DateField(
-        db_column='dt_leave_date',
+        'Leave Date',
         null=True,
         blank=True,
-        verbose_name=('Leave Date')
     )
-    departament = models.ForeignKey(
+    id_departament = models.ForeignKey(
         'Departament',
-        db_column='id_departament',
+        Departament,
         on_delete=models.CASCADE,
         null=False,
         blank=False,
         verbose_name=('Departament')
     )
-    employee = models.ForeignKey(
+    id_employee = models.ForeignKey(
         'Employee',
-        db_column='id_employee',        
+        Employee,
         on_delete=models.CASCADE,
         null=False,
         blank=False,
-        verbose_name=('Employee')
     )
     
-    class Meta:
-        managed = True
-        indexes = [
-            models.Index(fields=['employee']),
-            models.Index(fields=['departament']),
-        ]
-        db_table = 'allocation'
-        verbose_name = ('Allocation')
-        verbose_name_plural = ('Allocations')
+    def __str__(self) -> str:
+        return self.departament
 
 # Table relacao_alocacao_funcao
-class RelationAllocationRole(ModelBase):
+class RelationAllocationRole(ModelInherance):
     allocation = models.ForeignKey(
         'Allocation',
-        db_column='id_allocation',
+        Allocation,
         on_delete=models.CASCADE,
         null=True,
-        verbose_name=('Allocation')
     )
-    role = models.ForeignKey(
+    id_role = models.ForeignKey(
         'Role',
-        db_column='id_role',
+        Role,
         on_delete=models.CASCADE,
         null=True,
-        verbose_name=('Role')
     )
+   
+    def __str__(self) -> str:
+        return f'{self.allocation} - {self.id_role}'
     
-    class Meta:
-        managed = True
-        indexes = [
-            models.Index(fields=['allocation']),
-            models.Index(fields=['role']),
-        ]
-        db_table = 'relation_allocation_role'
-        verbose_name = ('Relation Allocation Role')
-        verbose_name_plural = ('Relations Allocations Roles')
-    
-class Document(ModelBase):
-    employee = models.ForeignKey(
+class Document(ModelInherance):
+    id_employee = models.ForeignKey(
         'Employee',
-        db_column='id_employee',
+        Employee,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        verbose_name=('Employee')
     )
     file_name = models.CharField(
         db_column='tx_file_name',
@@ -328,60 +276,38 @@ class Document(ModelBase):
         verbose_name=('File Name')
     )
     
-    class Meta:
-        managed = True
-        indexes = [
-            models.Index(fields=['employee']),
-        ]
-        db_table = 'document'
-        verbose_name = ('Document')
-        verbose_name_plural = ('Documents')
+    def __str__(self) -> str:
+        return self.file_name
     
-class Code(ModelBase):
-    code = models.CharField(
-        db_column='tx_code',
+class GenerateQrCode(ModelInherance):
+    qr_code = models.CharField(
+        'Code',
         max_length=80,
         null=False,
         blank=False,
-        verbose_name=('Code')
     )
     
-    class Meta:
-        managed = True
-        db_table = 'code'
-        verbose_name = ('Code')
-        verbose_name_plural = ('Codes')
+    def __str__(self) -> str:
+        return self.code
 
-class Register(ModelBase):
+class Register(ModelInherance):
     class TypeRegister(models.TextChoices):
         ENTRADA = 'E', ('Entrada')
         SAIDA = 'S', ('Saída')
      
-    date_clock_register = models.DateField(
-        db_column='dt_clock_register',
+    date_time_register = models.DateTimeField(
+        'Date of clock Register',
         null=False,
         blank=False,
-        verbose_name=('Date of clock Register')
-    )
-    hour_clock_register = models.TimeField(
-        db_column='tm_clock_register',
-        null=False,
-        blank=False,
-        verbose_name=('Time of clock Register')
     )
     type_clock_register = models.CharField(
-        db_column='cs_type_clock_register',
+        'Type of Clock Register',
         max_length=1,
         null=False,
         blank=False,
         choices=TypeRegister.choices,
-        verbose_name=('Type of Clock Register')
     )
     
-    class Meta:
-        managed = True
-        db_table = 'register'
-        verbose_name = ('Register')
-        verbose_name_plural = ('Registers')
-
+    def __str__(self) -> str:
+        return f'{self.date_time_register} for {self.type_clock_register}'
 
