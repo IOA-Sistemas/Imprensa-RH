@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
 from .models import Employee
-from serializers import EmployeeSerializer
+from .serializers import EmployeeSerializer
 from account.models import User
 from account.serializers import UserSerializer
 from rest_framework.response import Response

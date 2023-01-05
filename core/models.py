@@ -2,32 +2,8 @@ from django.db import models
 import random
 from account.models import User
 
-class ModelInherance(models.Model):
-    id = models.BigAutoField(
-        db_column='id',
-        primary_key=True,
-    )
-    created_at = models.DateTimeField(
-        'Created at',
-        auto_now_add=True,
-        null=True,
-        blank=True,
-    )
-    modified_at = models.DateTimeField(
-        'Modified at',
-        auto_now=True,
-        null=True,
-        blank=True,
-    )
-    is_active = models.BooleanField(
-        'Active',
-        null=False,
-        default=True,
-    )
-
-
 # Table cargo
-class Role(ModelInherance):
+class Role(models.Model):
     class Scholarity(models.TextChoices):
         MEDIO_INCOMPLETO = 'MI', ('Ensino Médio Incompleto')
         MEDIO_COMPLETO = 'MC', ('Ensino Médio Completo')
@@ -70,7 +46,7 @@ class Role(ModelInherance):
         return self.role_name
 
 # Table departamento
-class Departament(ModelInherance):
+class Departament(models.Model):
     departament_name = models.CharField(
         'Departament Name',
         max_length=80,
@@ -88,7 +64,7 @@ class Departament(ModelInherance):
         return self.departament_name
 
 # Table vinculo
-class EmploymentBond(ModelInherance):
+class EmploymentBond(models.Model):
     class Type(models.TextChoices):
         CLT = 'C', ('CLT')
         PJ = 'P', ('PJ')
@@ -113,7 +89,7 @@ class EmploymentBond(ModelInherance):
 
 
 # Table servidor
-class Employee(ModelInherance):
+class Employee(models.Model):
     class Gender(models.TextChoices):
         MALE = 'M', ('Male')
         FEMALE = 'F', ('Female')
@@ -124,10 +100,10 @@ class Employee(ModelInherance):
         return random.randint(min, max)
     
     user = models.ForeignKey(
-        'User',
         User,
+        related_name='user_account',
         on_delete=models.CASCADE,
-        null=False
+        null=False,
     )
     
     name = models.CharField(
@@ -203,14 +179,14 @@ class Employee(ModelInherance):
     )
     id_role = models.ForeignKey(
         Role,
-        'Employee Role',
+        related_name='employee_role',
         on_delete=models.CASCADE,
         null=False,
         blank=False,
     )
     id_bond = models.ForeignKey(
         EmploymentBond,
-        'Employee Bond',
+        related_name='employee_bond',
         on_delete=models.CASCADE,
         null=True,
         blank=False,
@@ -220,7 +196,7 @@ class Employee(ModelInherance):
         return self.name
     
 # Table alocacao
-class Allocation(ModelInherance):
+class Allocation(models.Model):
     start_date = models.DateField(
         'Start Date',
         null=False,
@@ -232,16 +208,16 @@ class Allocation(ModelInherance):
         blank=True,
     )
     id_departament = models.ForeignKey(
-        'Departament',
         Departament,
+        related_name='allocation_departament',
         on_delete=models.CASCADE,
         null=False,
         blank=False,
         verbose_name=('Departament')
     )
     id_employee = models.ForeignKey(
-        'Employee',
         Employee,
+        related_name='employee_allocated',
         on_delete=models.CASCADE,
         null=False,
         blank=False,
@@ -251,16 +227,16 @@ class Allocation(ModelInherance):
         return self.departament
 
 # Table relacao_alocacao_funcao
-class RelationAllocationRole(ModelInherance):
+class RelationAllocationRole(models.Model):
     allocation = models.ForeignKey(
-        'Allocation',
         Allocation,
+        related_name='allocation_related',
         on_delete=models.CASCADE,
         null=True,
     )
     id_role = models.ForeignKey(
-        'Role',
         Role,
+        related_name='role_related',
         on_delete=models.CASCADE,
         null=True,
     )
@@ -268,10 +244,10 @@ class RelationAllocationRole(ModelInherance):
     def __str__(self) -> str:
         return f'{self.allocation} - {self.id_role}'
     
-class Document(ModelInherance):
+class Document(models.Model):
     id_employee = models.ForeignKey(
-        'Employee',
         Employee,
+        related_name='employee_doc',
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -287,7 +263,7 @@ class Document(ModelInherance):
     def __str__(self) -> str:
         return self.file_name
     
-class GenerateQrCode(ModelInherance):
+class GenerateQrCode(models.Model):
     qr_code = models.CharField(
         'Code',
         max_length=80,
@@ -298,7 +274,7 @@ class GenerateQrCode(ModelInherance):
     def __str__(self) -> str:
         return self.code
 
-class Register(ModelInherance):
+class Register(models.Model):
     class TypeRegister(models.TextChoices):
         ENTRADA = 'E', ('Entrada')
         SAIDA = 'S', ('Saída')
