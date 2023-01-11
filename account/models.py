@@ -7,13 +7,10 @@ class User(AbstractUser):
         primary_key=True,
         null=False,
     )
-    username = models.CharField(
-        db_column='tx_username',
+    cpf = models.IntegerField(
         null=False,
-        max_length=64,
         unique=True
     )
-    
     email = models.CharField(
         db_column='tx_email',
         null=False,
@@ -23,8 +20,11 @@ class User(AbstractUser):
     
     objects = managers.UsersManager()
     
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = 'cpf'
     REQUIRED_FIELDS = ['email']
     
     def __str__(self) -> str:
         return self.username
+    
+    class Meta:
+        db_table = 'user_auth'

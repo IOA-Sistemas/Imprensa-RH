@@ -44,6 +44,9 @@ class Role(models.Model):
     
     def __str__(self) -> str:
         return self.role_name
+    
+    class Meta: 
+        db_table = 'tb_roles'
 
 # Table departamento
 class Departament(models.Model):
@@ -62,13 +65,17 @@ class Departament(models.Model):
     
     def __str__(self) -> str:
         return self.departament_name
+    
+    class Meta: 
+        db_table = 'tb_departaments'
 
 # Table vinculo
-class EmploymentBond(models.Model):
+class EmploymentAssociation(models.Model):
     class Type(models.TextChoices):
         CLT = 'C', ('CLT')
         PJ = 'P', ('PJ')
-        TRAINEE = 'T', ('Trainee')
+        OUTSOURCED = 'O', ('Tercerizado')
+        TRAINEE = 'E', ('Estágio')
     
     type = models.CharField(
         'Type of Employment Bond',
@@ -86,6 +93,9 @@ class EmploymentBond(models.Model):
     
     def __str__(self) -> str:
         return self.type
+    
+    class Meta: 
+        db_table = 'tb_employment_associations'
 
 
 # Table servidor
@@ -108,6 +118,12 @@ class Employee(models.Model):
     
     name = models.CharField(
         'Name',
+        max_length=80,
+        null=False,
+        blank=False,
+    )
+    surname = models.CharField(
+        'Surname',
         max_length=80,
         null=False,
         blank=False,
@@ -181,19 +197,22 @@ class Employee(models.Model):
         Role,
         related_name='employee_role',
         on_delete=models.CASCADE,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
     )
-    id_bond = models.ForeignKey(
-        EmploymentBond,
+    id_association = models.ForeignKey(
+        EmploymentAssociation,
         related_name='employee_bond',
         on_delete=models.CASCADE,
         null=True,
-        blank=False,
+        blank=True,
     )
     
     def __str__(self) -> str:
         return self.name
+    
+    class Meta: 
+        db_table = 'tb_employees'
     
 # Table alocacao
 class Allocation(models.Model):
@@ -225,9 +244,12 @@ class Allocation(models.Model):
     
     def __str__(self) -> str:
         return self.departament
+    
+    class Meta: 
+        db_table = 'employees_allocations'
 
-# Table relacao_alocacao_funcao
-class RelationAllocationRole(models.Model):
+# Table relacao entre alocacao e funcoes
+class AllocationRoles(models.Model):
     allocation = models.ForeignKey(
         Allocation,
         related_name='allocation_related',
@@ -243,6 +265,9 @@ class RelationAllocationRole(models.Model):
    
     def __str__(self) -> str:
         return f'{self.allocation} - {self.id_role}'
+    
+    class Meta: 
+        db_table = 'tb_allocation-roles'
     
 class Document(models.Model):
     id_employee = models.ForeignKey(
@@ -263,6 +288,9 @@ class Document(models.Model):
     def __str__(self) -> str:
         return self.file_name
     
+    class Meta: 
+        db_table = 'tb_document'
+    
 class GenerateQrCode(models.Model):
     qr_code = models.CharField(
         'Code',
@@ -273,6 +301,9 @@ class GenerateQrCode(models.Model):
     
     def __str__(self) -> str:
         return self.code
+    
+    class Meta: 
+        db_table = 'tb_qrcode'
 
 class Register(models.Model):
     class TypeRegister(models.TextChoices):
@@ -294,4 +325,7 @@ class Register(models.Model):
     
     def __str__(self) -> str:
         return f'{self.date_time_register} for {self.type_clock_register}'
+    
+    class Meta: 
+        db_table = 'tb_registers'
 
