@@ -1,11 +1,15 @@
 from rest_framework import serializers
 from .models import Employee
 
+
 class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = '__all__'
-
+        fields = (
+            'id', 'name', 'surname', 'register_number', 'birth_date', 'gender', 'admission_date',
+            'address', 'neighborhood', 'city', 'post_code', 'state', 'phone', 'email', 'id_role',
+            'id_association'
+        )
 
 # class ScholaritySerial(serializers.ModelSerializer):
 #     class Meta:
