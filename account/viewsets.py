@@ -3,11 +3,13 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .serializers import RegisterSerializer
 from core.models import Employee
+from .permissions import IsPostOnly
 
 # Create your views here.
 class RegisterViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.none()
     serializer_class = RegisterSerializer
+    permission_classes = [IsPostOnly]
     
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
