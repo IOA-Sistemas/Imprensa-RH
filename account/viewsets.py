@@ -3,7 +3,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .serializers import RegisterSerializer
 from core.models import Employee
-from .permissions import IsPostOnly
+from .permissions import IsPostOnly, AllowingGetAndUpdateForStaff
+from .models import User
+from .serializers import UserSerializer
 
 # Create your views here.
 class RegisterViewSet(viewsets.ModelViewSet):
@@ -20,3 +22,7 @@ class RegisterViewSet(viewsets.ModelViewSet):
 
 # TODO
 # Create Userviewset allowing update and delete and set permissions
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowingGetAndUpdateForStaff]

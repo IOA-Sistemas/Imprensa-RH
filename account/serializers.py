@@ -5,23 +5,6 @@ from core.models import Employee, EmploymentAssociation, Role
 from django.db.models import Q
 # from rest_framework.serializers import NestedCreateSerializer
 
-"""
-    TODO: 
-        - Create update and delete method
-        - Retrieve Passoword
-"""
-class UserSerializer(serializers.ModelSerializer):
-    password_confirm = serializers.CharField(
-        style={'input_type': 'password'},
-        write_only=True,
-        label="Password"
-    )
-    
-    class Meta:
-        model = User 
-        fields = ('id', 'cpf', 'email', 'is_staff', 'is_superuser', 'password', 'password_confirm')
-        extra_kwargs = {'password': {'write_only': True}}
-      
 class RegisterSerializer(serializers.Serializer):
     is_staff = serializers.BooleanField()
     is_superuser = serializers.BooleanField()
@@ -84,3 +67,24 @@ class RegisterSerializer(serializers.Serializer):
         }
         employee = Employee.objects.create(**employee_data)
         return employee, user
+    
+
+"""
+    TODO: 
+        - Create update and delete method
+        - Retrieve Passoword
+"""
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'cpf', 'email', 'is_staff', 'is_superuser')
+    # password_confirm = serializers.CharField(
+    #     style={'input_type': 'password'},
+    #     write_only=True,
+    #     label="Password"
+    # )
+    
+    # class Meta:
+    #     model = User 
+    #     fields = ('id', 'cpf', 'email', 'is_staff', 'is_superuser', 'password', 'password_confirm')
+    #     extra_kwargs = {'password': {'write_only': True}}
