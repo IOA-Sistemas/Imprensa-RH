@@ -1,11 +1,22 @@
-# from rest_framework import viewsets, status
-# from rest_framework.decorators import action
+from rest_framework import viewsets 
+from .serializers import  RegisterSerializer, UpdateEmployeeSerializer
+from .models import Employees
+from rest_framework import permissions
 # from rest_framework.response import Response
-# from .serializers import RegisterSerializer
-# from core.models import Employee
 # from .permissions import IsPostOnly, AllowingGetAndUpdateForStaff
-# from .models import User
-# from .serializers import UserSerializer
+
+class RegisterViewSet(viewsets.ModelViewSet):
+    queryset = Employees.objects.all()
+    serializer_class = RegisterSerializer
+    permission_classes = (permissions.AllowAny,)
+
+class UpdateViewSet(viewsets.ModelViewSet):
+    queryset = Employees.objects.all()
+    serializer_class = UpdateEmployeeSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    
+
+
 
 # # Create your views here.
 # class RegisterViewSet(viewsets.ModelViewSet):
