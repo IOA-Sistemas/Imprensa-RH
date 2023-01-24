@@ -1,12 +1,12 @@
-from rest_framework import viewsets, permissions
-from .models import Employee
-from .serializers import EmployeeSerializer
-from .permissions import AllowingGetAndUpateForOwner
+# from rest_framework import viewsets, permissions
+# from .models import Employee
+# from .serializers import EmployeeSerializer
+# from .permissions import AllowingGetAndUpateForOwner
 
-class EmployeeViewSet(viewsets.ModelViewSet):
-    queryset = Employee.objects.all()
-    serializer_class = EmployeeSerializer
-    permission_classes = [AllowingGetAndUpateForOwner]
+# class EmployeeViewSet(viewsets.ModelViewSet):
+#     queryset = Employee.objects.all()
+#     serializer_class = EmployeeSerializer
+#     permission_classes = [AllowingGetAndUpateForOwner]
 
 
 
