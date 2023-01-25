@@ -15,7 +15,7 @@ class UpdateViewSet(viewsets.ModelViewSet):
     serializer_class = UpdateEmployeeSerializer
     permission_classes = (permissions.IsAuthenticated,)
     
-
+    
 
 
 # # Create your views here.

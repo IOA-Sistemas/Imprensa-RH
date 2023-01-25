@@ -4,6 +4,7 @@ from core.models import EmploymentAssociation, Role
 import re
 from django.db.models import Q
 
+
 class RegisterSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     is_staff = serializers.BooleanField()
@@ -56,6 +57,7 @@ class RegisterSerializer(serializers.Serializer):
         employee.save()
         return employee
 
+
 class UpdateEmployeeSerializer(serializers.Serializer):
     email = serializers.EmailField()
     name = serializers.CharField()
@@ -97,5 +99,31 @@ class UpdateEmployeeSerializer(serializers.Serializer):
         instance.association = validated_data['association']
         instance.save()
         return instance
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(style={'input_type': 'password'}, write_only=True, label="Old Password")
+    password = serializers.CharField(style={'input_type': 'password'}, write_only=True, label="Password")
+    password_confirm = serializers.CharField(style={'input_type': 'password'}, write_only=True, label="Password Confirm")
+    
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        password = self.validated_data['password']
+        password_confirm = self.validated_data['password_confirm']
+        old_password = self.validated_data['old_password']
+        
+        if password != password_confirm:
+            raise serializers.ValidationError('Password and Passowrd confirm did not match')
+            return
+        if not user.check_password(old_password):
+            raise serializers.ValidationError('Old password is incorrect')
+            return
+        
+        instance.set_password(validated_data['password'])
+        instance.save()
+        return instance
+        
+
+
        
         
