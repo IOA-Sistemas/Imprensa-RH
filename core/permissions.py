@@ -1,4 +1,15 @@
-# from rest_framework import permissions
+from rest_framework import permissions
+from rest_framework import serializers
+
+class IsGetOnly(permissions.BasePermission):
+    """
+    Custom permission to only allow `POST` requests.
+    """
+    def has_permission(self, request, view):
+        if request.method != 'GET' and request.user.is_authenticated:
+            raise serializers.ValidationError("This endpoint only allows POST requests.")
+        return True
+
 
 # class AllowingGetAndUpateForOwner(permissions.BasePermission):
 #     """

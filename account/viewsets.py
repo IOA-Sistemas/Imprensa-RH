@@ -1,18 +1,24 @@
 from rest_framework import viewsets 
-from .serializers import  RegisterSerializer, UpdateEmployeeSerializer
+from account import serializers
 from .models import Employees
 from rest_framework import permissions
+from account import permissions as custom_permission
 # from rest_framework.response import Response
 # from .permissions import IsPostOnly, AllowingGetAndUpdateForStaff
 
 class RegisterViewSet(viewsets.ModelViewSet):
     queryset = Employees.objects.all()
-    serializer_class = RegisterSerializer
-    permission_classes = (permissions.AllowAny,)
+    serializer_class = serializers.RegisterSerializer
+    permission_classes = (custom_permission.IsPostOnly,)
 
 class UpdateViewSet(viewsets.ModelViewSet):
     queryset = Employees.objects.all()
-    serializer_class = UpdateEmployeeSerializer
+    serializer_class = serializers.UpdateEmployeeSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+class ChangePasswordViewSet(viewsets.ModelViewSet):
+    queryset = Employees.objects.all()
+    serializer_class = serializers.ChangePasswordSerializer
     permission_classes = (permissions.IsAuthenticated,)
     
     

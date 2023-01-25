@@ -1,14 +1,15 @@
-# from rest_framework import viewsets, permissions
-# from .models import Employee
-# from .serializers import EmployeeSerializer
-# from .permissions import AllowingGetAndUpateForOwner
+from rest_framework import viewsets, permissions
+from .serializers import EmployeesSerializer
+# from core import permissions as custom_permissions
+from django.contrib.auth import get_user_model
+from rest_framework.response import Response
+Employees = get_user_model()
 
-# class EmployeeViewSet(viewsets.ModelViewSet):
-#     queryset = Employee.objects.all()
-#     serializer_class = EmployeeSerializer
-#     permission_classes = [AllowingGetAndUpateForOwner]
-
-
+class EmployeesViewSet(viewsets.ModelViewSet):
+    queryset = Employees.objects.all()
+    serializer_class = EmployeesSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    http_method_names = ['get']
 
 # class ScholarityViewSet(viewsets.ModelViewSet):
 #     queryset = Scholarity.objects.all()
